@@ -201,7 +201,7 @@ fprintf('    PTB startup VBL Sync Test ... ');
 if skip
     fprintf('skipped\n');
 else
-    fprintf('successful');  % if we get this far, it was called successfully
+    fprintf('successful\n');  % if we get this far, it was called successfully
 end
 fprintf('    Screen(''DrawingFinished'') ... ');
 if finish
