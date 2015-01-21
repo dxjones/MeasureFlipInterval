@@ -2,7 +2,9 @@
 
 Author:  David Jones, 2015-01-21 dxjones@gmail.com
 
-The goal of this program is to help diagnose and debug video timing issues under different hardware and software configurations.
+The goal of this program is to help diagnose, debug, and fix
+some of the video timing issues in Psychtoolbox
+under different hardware and software configurations.
 
 Comments, feedback, and pull requests are welcome.
 
