@@ -192,14 +192,20 @@ legend(label, 'Location', 'NorthWest');
 %% print results
 
 fprintf('\n');
-fprintf('MeasureFlipInterval(finish = %d, skip = %d)\n', finish, skip);
+fprintf('MeasureFlipInterval(skip = %d, finish = %d)\n', skip, finish);
 fprintf('\n');
 fprintf('Computer Model = %s, %s\n', Computer.hw.model, ComputerModel);
 fprintf('Screen Resolution = %d x %d, vblank = %d, vtotal = %d\n', ...
     ScreenWidth, ScreenHeight, vblank, vtotal);
-fprintf('Screen(''DrawingFinished'',...) ');
+fprintf('    PTB startup VBL Sync Test ... ');
+if skip
+    fprintf('skipped\n');
+else
+    fprintf('successful');  % if we get this far, it was called successfully
+end
+fprintf('    Screen(''DrawingFinished'') ... ');
 if finish
-    fprintf('called\n');
+    fprintf('called before Screen(''Flip'')\n');
 else
     fprintf('*NOT* called\n');
 end
