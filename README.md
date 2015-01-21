@@ -1,10 +1,12 @@
 # MeasureFlipInterval
 
-2015-01-21 dxjones@gmail.com
+Author:  David Jones, 2015-01-21 dxjones@gmail.com
 
 The goal of this program is to help diagnose and debug video timing issues under different hardware and software configurations.
 
 Comments, feedback, and pull requests are welcome.
+
+## Measuring the Flip Interval
 
 At startup, as part of the first Screen('OpenWindow',...) command,
 Psychtoolbox tries to measure the flip interval empirically, but sometimes fails.
@@ -16,11 +18,13 @@ This initial "Sync Test" can be skipped by passing an extra parameter.
 This program reliably measures two things:
 
 1. The "Flip Interval", which is the time between vertical blanking events in the video refresh cycle.
+It does this by calling the Screen('Flip',...) command 500 times, and then calculating summary statistics.
 
-2. The delay between the moment the vertical blanking begins (VBL_timestamp)
+2. This program also measures the extra delay between the moment the vertical blanking begins (VBL_timestamp)
 and the moment the Screen('Flip',...) command returns control to the main program
 and executes the GetSecs command.
-On some computers, this delay is very brief; on others it is often close to 3 msec, which is very long.
+This delay seems to occur during the execution of the Screen('Flip',...) command, before the beam position query.
+On some computers, this delay is very brief; on others it is often close to 3 msec, which is a very long delay.
 
 This program has been tested using:
 
