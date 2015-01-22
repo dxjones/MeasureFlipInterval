@@ -74,7 +74,7 @@ r = Screen('Rect', s);
 ScreenHeight = RectHeight(r);
 ScreenWidth = RectWidth(r);
 
-FlipInterval = Screen('GetFlipInterval', w);
+PTB_FlipInterval = Screen('GetFlipInterval', w);
 winfo = Screen('GetWindowInfo', w);
 vblank = winfo.VBLStartline;
 vtotal = winfo.VBLEndline;
@@ -114,16 +114,18 @@ while true
         Screen('DrawingFinished', w, 1);
     end
     
+    % remember previous VBL_timestamp
+    VBL_prev = VBL_timestamp;
+
     % Flip
     when = 0;
-    VBL_prev = VBL_timestamp;
-    [VBL_timestamp Stim_timestamp Flip_timestamp Missed Beampos_after_Flip ] = Screen('Flip', w, when, 1);
-    Time_after_Flip = GetSecs;
-    
+    [VBL_timestamp, ~, Flip_timestamp, ~, Beampos_after_Flip ] = Screen('Flip', w, when, 1);
+
+    % store the results (VBL_prev must be valid, so ignore 1st iteration)
     if FlipCount > 0
         t(FlipCount) = VBL_timestamp - VBL_prev;
         b(FlipCount) = Beampos_after_Flip;
-        d(FlipCount) = Time_after_Flip - VBL_timestamp;
+        d(FlipCount) = Flip_timestamp - VBL_timestamp;
     end
     FlipCount = FlipCount + 1;
 end
@@ -153,7 +155,7 @@ t1 = tx(1:end-1);
 t2 = tx(2:end);
 
 % sort the valid flip intervals
-[tx ix] = sort(tx);
+[tx, ix] = sort(tx);
 bx = b(ix);
 
 %% plots results
@@ -197,6 +199,7 @@ fprintf('\n');
 fprintf('Computer Model = %s, %s\n', Computer.hw.model, ComputerModel);
 fprintf('Screen Resolution = %d x %d, vblank = %d, vtotal = %d\n', ...
     ScreenWidth, ScreenHeight, vblank, vtotal);
+fprintf('PTB estimate of Flip Interval = %10.6f msec\n', 1000 * PTB_FlipInterval);
 fprintf('    PTB startup VBL Sync Test ... ');
 if skip
     fprintf('skipped\n');
@@ -217,13 +220,14 @@ fprintf('    valid flips = %4d\n', nnz(X));
 fprintf('     fast flips = %4d\n', nnz(t < tlo));
 fprintf('     slow flips = %4d\n', nnz(t > thi));
 fprintf('\n');
-fprintf('Statistics for delays after Flip (GetSecs - VBL_timestamp)\n');
+fprintf('Statistics for delays after Flip (Flip_timestamp - VBL_timestamp)\n');
 TimingStatistics(d);
 fprintf('Statistics for all flips:\n');
 TimingStatistics(t);
 
 % if only a subset of flips were valid, show their statistics
-if nnz(X) ~= Nsamples
+Nvalid = nnz(X);
+if Nvalid > 0 && Nvalid < Nsamples
     fprintf('Statistics for valid flips:\n');
     TimingStatistics(tx);
 end
@@ -231,7 +235,7 @@ end
 if any(t > thi)
     fprintf('List of slow flips ...\n');
     z = (1:Nsamples)';
-    z(t > thi)
+    display(z(t > thi));
 end
 
 
