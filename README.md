@@ -45,19 +45,23 @@ I will add your results to Results.pdf
 
 ## Psychtoolbox Video Timing Issues/Bugs
 
+I am hopeful this program,
+with evidence collected from lots of different Mac hardware & software configurations,
+will help the PTB community diagnose, debug, and fix the lingering timing issues that many of us are struggling with.
+
 ### Bug #1. VBL Sync Failure at startup
 
 On some Mac computers, Psychtoolbox fails the VBL Sync Test on startup,
 either intermittently or every time.
-In contrast, in my experience MeasureFlipInterval(1) succeeds every time, with no missed Flips.
+In contrast, in my experience, MeasureFlipInterval(1) succeeds every time, with no missed Flips.
 
 Therefore, the Psychtoolbox VBL Sync Test Failure should be fixable by following the example code here.
 
-### Bug #2. Strange 3 millisecond delay following vertical blanking
+### Bug #2. Extra 3 millisecond delay following vertical blanking
 
 On some Mac computers,
-there is a 3 millisecond delay between the vertical blanking event (VBL_timestamp)
-and the moment just before Screen('Flip',...) finishes.
+there is a 3 millisecond delay between the vertical blanking event (VBLTimestamp)
+and the moment just before Screen('Flip',...) finishes (FlipTimeStamp).
 Based on the beam position returned,
 this extra delay seems to occur before the final beam position query.
 
