@@ -19,7 +19,7 @@
 
 function MeasureFlipInterval(skip, finish)
 
-%% default parameters
+% default parameters
 if nargin < 1, skip = 0; end
 if nargin < 2, finish = 1; end
 
@@ -102,8 +102,14 @@ Screen('Flip', w);
 
 FlipCount = 0;
 VBL_timestamp = 0;
-while true
-    if KbCheck || FlipCount > Nsamples
+while FlipCount <= Nsamples
+    if KbCheck
+        % if user stops early, truncate results
+        fprintf('Warning: stopped early by user\n');
+        Nsamples = FlipCount;
+        t = t(1:Nsamples);
+        b = b(1:Nsamples);
+        d = d(1:Nsamples);
         break
     end
     
